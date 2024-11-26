@@ -12,3 +12,9 @@ class EscaneoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Escaneo
         fields = '__all__'
+
+class EscaneoSerializerHistory(serializers.ModelSerializer):
+    #dispositivos = DispositivoSerializer(many=True, read_only=True)
+    class Meta:
+        model = Escaneo
+        fields = '__all__'

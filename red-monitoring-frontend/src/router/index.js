@@ -1,8 +1,6 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "@/views/HomeS.vue";
-
-Vue.use(VueRouter);
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from "@/views/HomeS.vue"
+import HistorialScreen from "@/components/HistorialScreen.vue";
 
 const routes = [
     {
@@ -10,12 +8,21 @@ const routes = [
         name: "Home",
         component: Home,
     },
-];
+    {
+        path: '/charts/:escaneoId',
+        name: 'ChartsScreen',
+        component: () => import('@/components/ChartsScreen.vue'),
+    },
+    {
+        path: "/historial",
+        name: "HistorialScreen",
+        component: HistorialScreen,
+    },
+]
 
-const router = new VueRouter({
-    mode: "history",
-    base: process.env.BASE_URL,
-    routes,
-});
+const router = createRouter({
+    history: createWebHistory(process.env.BASE_URL),
+    routes
+})
 
-export default router;
+export default router

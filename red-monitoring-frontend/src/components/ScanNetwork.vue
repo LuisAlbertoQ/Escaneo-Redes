@@ -8,7 +8,7 @@
             <div class="card-body">
                 <b-form @submit.prevent="startScan" class="mb-4">
                     <b-form-group label="Rango de IP:" label-for="ipRange"
-                        description="Ejemplo: 192.168.1.1-192.168.1.254">
+                        description="Ejemplo: 192.168.1.0/24">
                         <b-form-input id="ipRange" v-model="ipRange" placeholder="Ingrese el rango de IP"
                             :disabled="loading" trim></b-form-input>
                     </b-form-group>
@@ -28,8 +28,12 @@
                     <div class="table-responsive">
                         <b-table :items="devices" :fields="fields" striped hover responsive class="mb-4"></b-table>
                     </div>
-
-                    <ExportScan v-if="escaneoId" :escaneoId="escaneoId" class="mt-3" />
+                    <div class="d-flex justify-content-end gap-2">
+                        <b-button @click="goToCharts" variant="info" :disabled="!escaneoId" class="px-4">
+                            Ver Gráficos
+                        </b-button>
+                        <ExportScan v-if="escaneoId" :escaneoId="escaneoId" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -82,7 +86,7 @@ export default {
             this.loading = true;
             try {
                 const response = await axios.post("http://127.0.0.1:8000/api/monitor/escanear/", {
-                    ip_range: this.ipRange,
+                    rango_ips: this.ipRange,
                 });
                 this.devices = response.data.dispositivos;
                 this.escaneoId = response.data.id;
@@ -90,6 +94,14 @@ export default {
                 this.error = err.response?.data?.error || "Ocurrió un error al escanear.";
             } finally {
                 this.loading = false;
+            }
+        },
+        goToCharts() {
+            if (this.escaneoId) {
+                this.$router.push({
+                    name: "ChartsScreen",
+                    params: { escaneoId: this.escaneoId },
+                });
             }
         },
     },
